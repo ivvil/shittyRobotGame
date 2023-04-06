@@ -1,8 +1,7 @@
 class entity{
-    constructor(x = 0, y = 0, azimuth = 0, hp = 100, sprite){
+    constructor(x = 0, y = 0, hp = 100, sprite){
 	this.x = x;
 	this.y = y;
-	this.azimuth = azimuth;
 	this.hp = hp;
 	this.sprite = new Image();
 	this.sprite.src = sprite
@@ -18,8 +17,8 @@ class entity{
 }
 
 class protagonist extends entity{
-    constructor(x = 0, y = 0, azimuth = 0, hp = 100, movementSpeed = 10, inventory = []){
-	super(x, y, azimuth, hp);
+    constructor(x = 0, y = 0, hp = 100, movementSpeed = 10, inventory = []){
+	super(x, y, hp);
 	this.movementSpeed = movementSpeed;
 	this.inventory = inventory;
 	this.sprite = new Image();
@@ -76,10 +75,24 @@ function globalAnimationTick(){
     
 }
 
+function getMousePos(canvas, evt){
+    area = canvas.getBoundingClientRect();
+    return {
+	x: evt.clientX - area.left,
+	y: evt.clientY - area.top
+    }
+}
+
 function onStart(){
     player = new protagonist()
     canvas = document.getElementById("viewport");
+    spriteAngle = canvas.addEventListener("mousemove", function(evt) {
+	mousePos = getMousePos(canvas, evt);
+	// console.log("X: " + mousePos.x + "Y: " + mousePos.y)
+    }, false);
     ctx = canvas.getContext("2d");
+    console.log(mousePos)
+    // ctx.rotate(45 * Math.PI / 180);
     setInterval(drawCanvas, 7)
     doGlobalAnimationTick(1)
     // setInterval(globalAnimationTick, 500)
