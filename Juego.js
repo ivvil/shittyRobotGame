@@ -48,8 +48,13 @@ function keyDown(event){
     
 }
 function drawCanvas(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.drawImage(player.sprite, 0, playerSpriteStatus * 22, 21, 22, player.x, player.y, 42, 44) // Start player on the top left
+    angle = rotAngle
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // ctx.translate(player.x, player.y)
+    ctx.rotate(-angle);
+    ctx.drawImage(player.sprite, 0, playerSpriteStatus * 22, 21, 22, player.x, player.y, 42, 44); // Start player on the top left
+    ctx.rotate(angle);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 function doGlobalAnimationTick(value){
@@ -75,23 +80,22 @@ function globalAnimationTick(){
     
 }
 
-function getMousePos(canvas, evt){
+function getMousePos(evt){
     area = canvas.getBoundingClientRect();
-    return {
-	x: evt.clientX - area.left,
-	y: evt.clientY - area.top
-    }
+    // return {
+    // 	x: evt.clientX - area.left,
+    // 	y: evt.clientY - area.top
+    // }
+    // console.log(evt.clientX - area.left, evt.client - area.top)
+    rotAngle = Math.atan2(evt.clientX - area.left, evt.clientY - area.top)
+    console.log(rotAngle)
 }
 
 function onStart(){
     player = new protagonist()
     canvas = document.getElementById("viewport");
-    spriteAngle = canvas.addEventListener("mousemove", function(evt) {
-	mousePos = getMousePos(canvas, evt);
-	// console.log("X: " + mousePos.x + "Y: " + mousePos.y)
-    }, false);
+    spriteAngle = canvas.addEventListener("mousemove", function(evt){getMousePos(evt)}, false);
     ctx = canvas.getContext("2d");
-    console.log(mousePos)
     // ctx.rotate(45 * Math.PI / 180);
     setInterval(drawCanvas, 7)
     doGlobalAnimationTick(1)
