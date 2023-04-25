@@ -8,3 +8,4 @@ A shitty robot game
   * [ ] Shooting
 ## Attributions ##
   * Crosshair: https://donut-studio.itch.io/pixel-crosshaires
+  * Tileset: https://anokolisa.itch.io/dungeon-crawler-pixel-art-asset-pack
