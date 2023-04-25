@@ -14,6 +14,9 @@ class entity{
     deltaHp(deltaHp){
 	this.hp += deltaHp;
     }
+    draw(){
+        ctx.drawImage(player.sprite, 0, playerSpriteStatus * 22, 21, 22, player.x, player.y, 42, 44);
+    }
 }
 
 class protagonist extends entity{
@@ -28,6 +31,20 @@ class protagonist extends entity{
 
 playerSpriteStatus = 0
 intervalCtx = 0
+
+function rotateDrawable(obj, alpha){
+
+    ctx.translate(obj.x, obj.y);
+    ctx.rotate(-alpha);
+    ctx.translate(-obj.x, -obj.y);
+
+    obj.draw();
+
+    ctx.translate(obj.x, obj.y);
+    ctx.rotate(alpha);
+    ctx.translate(-obj.x, -obj.y)
+
+}
 
 function keyDown(event){
 
@@ -48,13 +65,11 @@ function keyDown(event){
     
 }
 function drawCanvas(){
-    angle = rotAngle
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Limpiar el canvas antes de dibujar un nuevo frame
     // ctx.translate(player.x, player.y)
-    ctx.rotate(-angle);
-    ctx.drawImage(player.sprite, 0, playerSpriteStatus * 22, 21, 22, player.x, player.y, 42, 44); // Start player on the top left
-    ctx.rotate(angle);
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    player.draw()
+
 }
 
 function doGlobalAnimationTick(value){
