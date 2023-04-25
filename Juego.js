@@ -1,15 +1,17 @@
-class entity{
-    constructor(x = 0, y = 0, hp = 100, sprite){
+class drawable{
+    constructor(x = 0, y = 0, hp = 100, sprite, spriteStatus,width, height){
 	this.x = x;
 	this.y = y;
+	this.width = width;
+	this.height = height;
 	this.hp = hp;
 	this.sprite = new Image();
-	this.sprite.src = sprite
+	this.sprite.src = sprite;
+	this.spriteStatus = spriteStatus;
     }
-    move(deltaX, deltaY, deltaAzimuth){
+    move(deltaX, deltaY){
 	this.x += deltaX;
 	this.y += deltaY;
-	this.azimuth += deltaAzimuth;
     }
     deltaHp(deltaHp){
 	this.hp += deltaHp;
@@ -19,18 +21,35 @@ class entity{
     }
 }
 
-class protagonist extends entity{
-    constructor(x = 0, y = 0, hp = 100, movementSpeed = 10, inventory = []){
+class entity extends drawable{
+    constructor(x = 0, y = 0, hp = 100, movementSpeed = 10, inventory = [], azimuth){
 	super(x, y, hp);
 	this.movementSpeed = movementSpeed;
 	this.inventory = inventory;
 	this.sprite = new Image();
 	this.sprite.src = "src/sprites/Personajes/move without FX.png"
+	this.spriteStatus = 0;
+	this.width = 21;
+	this.height = 22;
+	this.azimuth = azimuth;
     }
 }
 
 playerSpriteStatus = 0
 intervalCtx = 0
+rotAngle = 0
+
+function rotDrawable(obj, alpha){
+    xMed = obj.x + (obj.width / 2);
+    yMed = obj.y + (obj.height / 2);
+
+    ctx.translate(xMed, yMed); // Change frame of reference
+    ctx.rotate(alpha)          // Rotate canvas arround drawable's axis 
+    ctx.translate(-xMed, yMed);// Return frame of reference
+
+    
+    
+}
 
 function rotateDrawable(obj, alpha){
 
@@ -97,13 +116,7 @@ function globalAnimationTick(){
 
 function getMousePos(evt){
     area = canvas.getBoundingClientRect();
-    // return {
-    // 	x: evt.clientX - area.left,
-    // 	y: evt.clientY - area.top
-    // }
-    // console.log(evt.clientX - area.left, evt.client - area.top)
-    rotAngle = Math.atan2(evt.clientX - area.left, evt.clientY - area.top)
-    console.log(rotAngle)
+    player.azimuth = Math.atan2(evt.clientX - area.left, evt.clientY - area.top)
 }
 
 function onStart(){
@@ -112,7 +125,7 @@ function onStart(){
     spriteAngle = canvas.addEventListener("mousemove", function(evt){getMousePos(evt)}, false);
     ctx = canvas.getContext("2d");
     // ctx.rotate(45 * Math.PI / 180);
-    setInterval(drawCanvas, 7)
+    setInterval(drawCanvas, 1000)
     doGlobalAnimationTick(1)
     // setInterval(globalAnimationTick, 500)
     window.onkeydown=keyDown;
